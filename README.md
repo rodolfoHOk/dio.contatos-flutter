@@ -1,16 +1,32 @@
-# contatos_flutter
+# Contatos Flutter App
 
-A new Flutter project.
+> Desafio Criando um App Flutter de Lista de Contatos da DIO
 
-## Getting Started
+## Tecnologias
 
-This project is a starting point for a Flutter application.
+- Dart
+- Flutter
+- (em breve)
 
-A few resources to get you started if this is your first Flutter project:
+### Bibliotecas adicionais
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- (em breve)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Galeria de Imagens do projeto
+
+<img src="https://raw.githubusercontent.com/rodolfoHOk/portfolio-img/main/images/contatos-flutter-01.png" alt="Contatos Flutter Image 01" width="225"/>
+
+## Rodar
+
+### Requisitos
+
+- Flutter instalado
+- Android Studio
+- Android SDK command line tools
+- Clonar este repositório
+
+### Executar
+
+- Abrir um dispositivo emulado Android
+- Terminal na raiz do projeto: flutter run
+
