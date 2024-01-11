@@ -7,10 +7,12 @@
 - Dart
 - Flutter
 - back4app: Backend as a Service (BaaS)
+- Rest API
 
 ### Bibliotecas adicionais
 
-- (em breve)
+- flutter_dotenv
+- dio
 
 ## Galeria de Imagens do projeto
 
