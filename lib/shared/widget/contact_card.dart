@@ -23,7 +23,7 @@ class _ContactCardState extends State<ContactCard> {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
-      color: Colors.indigo,
+      color: const Color.fromRGBO(32, 32, 64, 1),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
@@ -39,9 +39,52 @@ class _ContactCardState extends State<ContactCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Nome: ${data.name}"),
-                Text("E-mail: ${data.email}"),
-                Text("Telefone: ${data.phoneNumber}"),
+                Row(
+                  children: [
+                    const Text(
+                      "Nome:",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      data.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      "E-mail:",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      data.email,
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      "Telefone:",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      data.phoneNumber.toString(),
+                    ),
+                  ],
+                ),
               ],
             ),
           ],
