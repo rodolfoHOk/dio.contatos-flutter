@@ -1,12 +1,13 @@
 // ignore_for_file: unnecessary_getters_setters
 
-class CreateContact {
+class InputContact {
+  String? _objectId;
   String _name = "";
   String _email = "";
   int _phoneNumber = 0;
   String _imageUrl = "";
 
-  CreateContact(
+  InputContact(
       {required String name,
       required String email,
       required int phoneNumber,
@@ -17,6 +18,8 @@ class CreateContact {
     _imageUrl = imageUrl;
   }
 
+  String? get objectId => _objectId;
+  set objectId(String? objectId) => _objectId = objectId;
   String get name => _name;
   set name(String name) => _name = name;
   String get email => _email;
@@ -26,7 +29,8 @@ class CreateContact {
   String get imageUrl => _imageUrl;
   set imageUrl(String imageUrl) => _imageUrl = imageUrl;
 
-  CreateContact.fromJson(Map<String, dynamic> json) {
+  InputContact.fromJson(Map<String, dynamic> json) {
+    _objectId = json['objectId'];
     _name = json['name'];
     _email = json['email'];
     _phoneNumber = json['phoneNumber'];
@@ -35,6 +39,7 @@ class CreateContact {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['objectId'] = _objectId;
     data['name'] = _name;
     data['email'] = _email;
     data['phoneNumber'] = _phoneNumber;
