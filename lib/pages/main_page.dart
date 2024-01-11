@@ -1,3 +1,5 @@
+import 'package:contatos_flutter/models/contact.dart';
+import 'package:contatos_flutter/shared/widget/contact_card.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -12,25 +14,34 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'To Do',
-            ),
-          ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.title),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add_reaction_outlined),
+        body: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Column(
+            children: <Widget>[
+              ContactCard(
+                contact: Contact(
+                  objectId: "abc123",
+                  name: "Ana Yamada",
+                  email: "ana@email.com",
+                  phoneNumber: 11988887777,
+                  imageUrl:
+                      "https://raw.githubusercontent.com/rodolfoHOk/portfolio-img/main/images/avatar/ana.jpg",
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          tooltip: 'Increment',
+          child: const Icon(Icons.add_reaction_outlined),
+        ),
       ),
     );
   }

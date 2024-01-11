@@ -22,7 +22,7 @@ class ContactsApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MainPage(title: 'Contatos'),
+      home: const MainPage(title: 'Lista de Contatos'),
     );
   }
 }
