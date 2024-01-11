@@ -6,7 +6,7 @@
 
 - Dart
 - Flutter
-- (em breve)
+- back4app: Backend as a Service (BaaS)
 
 ### Bibliotecas adicionais
 
