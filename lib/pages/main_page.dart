@@ -1,4 +1,6 @@
+import 'package:contatos_flutter/exceptions/bad_request_exception.dart';
 import 'package:contatos_flutter/exceptions/http_request_exception.dart';
+import 'package:contatos_flutter/exceptions/not_found_exception.dart';
 import 'package:contatos_flutter/models/contact.dart';
 import 'package:contatos_flutter/pages/add_contact_page.dart';
 import 'package:contatos_flutter/services/contact/contact_service.dart';
@@ -34,17 +36,7 @@ class _MainPageState extends State<MainPage> {
       _contacts = await _contactService.list();
     } catch (e) {
       if (e is HttpRequestException) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(
-                e.message,
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-          );
-        }
+        showErrorMessage(e.message);
       } else {
         rethrow;
       }
@@ -52,6 +44,36 @@ class _MainPageState extends State<MainPage> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  void delete(String objectId) async {
+    try {
+      await _contactService.delete(objectId);
+    } catch (e) {
+      if (e is HttpRequestException) {
+        showErrorMessage(e.message);
+      } else if (e is BadRequestException) {
+        showErrorMessage(e.message);
+      } else if (e is NotFoundException) {
+        showErrorMessage(e.message);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  void showErrorMessage(String message) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            message,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      );
     }
   }
 
@@ -66,15 +88,21 @@ class _MainPageState extends State<MainPage> {
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: ListView.builder(
-              itemCount: _contacts.length,
-              itemBuilder: (_, index) {
-                Contact contact = _contacts[index];
-                return Dismissible(
-                    key: Key(contact.objectId ?? contact.email),
-                    child: ContactCard(
-                      contact: contact,
-                    ));
-              }),
+            itemCount: _contacts.length,
+            itemBuilder: (_, index) {
+              Contact contact = _contacts[index];
+              return Dismissible(
+                key: Key(contact.objectId ?? contact.email),
+                onDismissed: (_) {
+                  delete(contact.objectId!);
+                },
+                child: ContactCard(
+                  key: Key(contact.objectId ?? contact.email),
+                  contact: contact,
+                ),
+              );
+            },
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
