@@ -13,6 +13,8 @@
 
 - flutter_dotenv
 - dio
+- image_picker
+- image_gallery_saver
 
 ## Galeria de Imagens do projeto
 
