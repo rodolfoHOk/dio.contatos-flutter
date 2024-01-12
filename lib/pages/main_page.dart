@@ -1,4 +1,5 @@
 import 'package:contatos_flutter/models/contact.dart';
+import 'package:contatos_flutter/pages/add_contact_page.dart';
 import 'package:contatos_flutter/shared/widget/contact_card.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,7 @@ class _MainPageState extends State<MainPage> {
                 contact: Contact(
                   objectId: "abc123",
                   name: "Ana Yamada",
-                  email: "ana@email.com",
+                  email: "ana.ymd@email.com",
                   phoneNumber: 11988887777,
                   imageUrl:
                       "https://raw.githubusercontent.com/rodolfoHOk/portfolio-img/main/images/avatar/ana.jpg",
@@ -38,7 +39,10 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const AddContactPage()));
+          },
           tooltip: 'Increment',
           child: const Icon(Icons.add_reaction_outlined),
         ),
