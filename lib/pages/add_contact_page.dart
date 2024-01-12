@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'package:contatos_flutter/exceptions/bad_request_exception.dart';
+import 'package:contatos_flutter/exceptions/http_request_exception.dart';
+import 'package:contatos_flutter/models/input_contact.dart';
+import 'package:contatos_flutter/services/contact/contact_service.dart';
 import 'package:contatos_flutter/shared/widget/custom_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -21,9 +25,13 @@ class _AddContactPageState extends State<AddContactPage> {
 
   late ImagePicker imagePicker;
 
+  var isLoading = false;
+  late ContactService _contactService;
+
   @override
   void initState() {
     imagePicker = ImagePicker();
+    _contactService = ContactService();
     super.initState();
   }
 
@@ -60,6 +68,88 @@ class _AddContactPageState extends State<AddContactPage> {
     setState(() {});
   }
 
+  void saveContact() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    var hasError = "";
+    if (nameController.text.trim() == "") {
+      hasError = "Nome não pode estar vazio";
+    }
+    if (emailController.text.trim() == "") {
+      if (hasError.trim().isNotEmpty) {
+        hasError += ", E-mail não pode estar vazio";
+      } else {
+        hasError = "E-mail não pode estar vazio";
+      }
+    }
+    if (phoneController.text.trim() == "") {
+      if (hasError.trim().isNotEmpty) {
+        hasError += ", Telefone não pode estar vazio";
+      } else {
+        hasError = "Telefone não pode estar vazio";
+      }
+    }
+    if (image == null) {
+      if (hasError.trim().isNotEmpty) {
+        hasError += ", Imagem deve ser selecionada";
+      } else {
+        hasError = "Imagem deve ser selecionada";
+      }
+    }
+
+    if (hasError.trim().isNotEmpty) {
+      showErrorMessage(hasError);
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      var inputContact = InputContact(
+        name: nameController.text,
+        email: emailController.text,
+        phoneNumber: int.tryParse(phoneController.text) ?? 0,
+        imageUrl: image!.path,
+      );
+
+      try {
+        var response = await _contactService.create(inputContact);
+        debugPrint(response.toString());
+        nameController.text = "";
+        emailController.text = "";
+        phoneController.text = "";
+        image = null;
+      } catch (e) {
+        if (e is BadRequestException) {
+          showErrorMessage(e.message);
+        } else if (e is HttpRequestException) {
+          showErrorMessage(e.message);
+        } else {
+          debugPrint(e.toString());
+          rethrow;
+        }
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  void showErrorMessage(String message) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            message,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -70,7 +160,7 @@ class _AddContactPageState extends State<AddContactPage> {
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Column(
+          child: ListView(
             children: [
               CustomFormField(
                 label: "Nome",
@@ -182,6 +272,30 @@ class _AddContactPageState extends State<AddContactPage> {
                           ),
                         ),
                 ],
+              ),
+              const SizedBox(height: 64),
+              SizedBox(
+                height: 48,
+                child: FilledButton(
+                  onPressed: () => saveContact(),
+                  child: isLoading
+                      ? const Icon(Icons.refresh)
+                      : const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.save,
+                              size: 24,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              "Salvar",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                ),
               ),
             ],
           ),
