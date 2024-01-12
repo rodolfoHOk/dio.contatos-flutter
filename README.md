@@ -15,6 +15,7 @@
 - dio
 - image_picker
 - image_gallery_saver
+- image_cropper
 
 ## Galeria de Imagens do projeto
 
