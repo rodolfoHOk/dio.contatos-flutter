@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:contatos_flutter/exceptions/bad_request_exception.dart';
 import 'package:contatos_flutter/exceptions/http_request_exception.dart';
 import 'package:contatos_flutter/models/input_contact.dart';
+import 'package:contatos_flutter/pages/main_page.dart';
 import 'package:contatos_flutter/services/contact/contact_service.dart';
 import 'package:contatos_flutter/shared/widget/custom_form_field.dart';
 import 'package:flutter/material.dart';
@@ -119,13 +120,19 @@ class _AddContactPageState extends State<AddContactPage> {
         emailController.text = "";
         phoneController.text = "";
         image = null;
+        if (context.mounted) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) => const MainPage(title: 'Lista de Contatos'),
+            ),
+          );
+        }
       } catch (e) {
         if (e is BadRequestException) {
           showErrorMessage(e.message);
         } else if (e is HttpRequestException) {
           showErrorMessage(e.message);
         } else {
-          debugPrint(e.toString());
           rethrow;
         }
       } finally {
@@ -279,7 +286,15 @@ class _AddContactPageState extends State<AddContactPage> {
                 child: FilledButton(
                   onPressed: () => saveContact(),
                   child: isLoading
-                      ? const Icon(Icons.refresh)
+                      ? const Center(
+                          child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
                       : const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:contatos_flutter/models/contact.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +34,7 @@ class _ContactCardState extends State<ContactCard> {
               width: 64,
               height: 64,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(data.imageUrl),
+                backgroundImage: FileImage(File(data.imageUrl)),
               ),
             ),
             const SizedBox(width: 32),

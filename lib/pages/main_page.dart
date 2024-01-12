@@ -1,5 +1,7 @@
+import 'package:contatos_flutter/exceptions/http_request_exception.dart';
 import 'package:contatos_flutter/models/contact.dart';
 import 'package:contatos_flutter/pages/add_contact_page.dart';
+import 'package:contatos_flutter/services/contact/contact_service.dart';
 import 'package:contatos_flutter/shared/widget/contact_card.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +15,46 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  late ContactService _contactService;
+  late List<Contact> _contacts = [];
+  var isLoading = false;
+
+  @override
+  void initState() {
+    _contactService = ContactService();
+    loadData();
+    super.initState();
+  }
+
+  void loadData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      _contacts = await _contactService.list();
+    } catch (e) {
+      if (e is HttpRequestException) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(
+                e.message,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        }
+      } else {
+        rethrow;
+      }
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -23,20 +65,16 @@ class _MainPageState extends State<MainPage> {
         ),
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Column(
-            children: <Widget>[
-              ContactCard(
-                contact: Contact(
-                  objectId: "abc123",
-                  name: "Ana Yamada",
-                  email: "ana.ymd@email.com",
-                  phoneNumber: 11988887777,
-                  imageUrl:
-                      "https://raw.githubusercontent.com/rodolfoHOk/portfolio-img/main/images/avatar/ana.jpg",
-                ),
-              ),
-            ],
-          ),
+          child: ListView.builder(
+              itemCount: _contacts.length,
+              itemBuilder: (_, index) {
+                Contact contact = _contacts[index];
+                return Dismissible(
+                    key: Key(contact.objectId ?? contact.email),
+                    child: ContactCard(
+                      contact: contact,
+                    ));
+              }),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
